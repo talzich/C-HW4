@@ -177,5 +177,4 @@ int main(int argc, char const *argv[]){
     free(word);
     free(text);
     return 0;
-
 }
