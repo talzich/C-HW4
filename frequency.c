@@ -174,9 +174,5 @@ int main(int argc, char const *argv[]){
     else
         print_words(root, word, pos, INIT_LEN);
     
-    if (word != NULL)
-        free(word);
-    if (text != NULL)    
-        free(text);
     return 0;
 }
