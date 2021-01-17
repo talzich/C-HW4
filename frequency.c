@@ -141,6 +141,7 @@ void print_words_r(Node *root, char *word, int index, int length){
 
 int main(int argc, char const *argv[]){
 
+
     //Dynamically allocate memory for our string
     char *text = (char *)malloc(INIT_LEN*sizeof(char));
 
@@ -178,5 +179,3 @@ int main(int argc, char const *argv[]){
     return 0;
 
 }
-
-
