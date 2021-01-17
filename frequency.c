@@ -91,8 +91,8 @@ void fill_trie(char *text, Node *root){
         insert(root, word);
         word = strtok(NULL, " \n\r\v\t\f");
     }
-    if(copy != NULL)
-        free(copy);
+    // if(copy != NULL)
+    //     free(copy);
 }
 
 void print_word(char *word, int n, int count){
@@ -174,9 +174,9 @@ int main(int argc, char const *argv[]){
     else
         print_words(root, word, pos, INIT_LEN);
     
-    if (word != NULL)
-        free(word);
-    if (text != NULL)    
-        free(text);
-    return 0;
+    // if (word != NULL)
+    //     free(word);
+    // if (text != NULL)    
+    //     free(text);
+    // return 0;
 }
