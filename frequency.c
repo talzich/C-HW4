@@ -6,6 +6,7 @@
 #define INIT_LEN 10
 #define AB_SIZE 26
 #define INDEX(c) ((int)c - 97)
+#define LETTER(i) (char)(i + 97)
 
 typedef struct node{
     struct node *children[AB_SIZE]; // Will store all the children this node has
@@ -51,14 +52,13 @@ void init(char *str, int length){
             str[i++] = c;
         }
 
-        else if (c == ' ' || c == '\n' || c == '\r' || c == '\v' || c == '\t'){
+        else if (c == ' ' || c == '\n' || c == '\r' || c == '\v' || c == '\t' || c == '\f'){
             str[i++] = c;
         }
     }
 }
 
-void fill_trie(Node *root, char *word){
-
+void insert(Node *root, char *word){
     int c; 
     int length = strlen(word); 
     int index; 
@@ -76,25 +76,108 @@ void fill_trie(Node *root, char *word){
   
     pCrawl->is_end = true;
     pCrawl->count++;
-
-
 }
 
-int main(void){
+void fill_trie(char *text, Node *root){
 
-    //Dynamically allocate memory for our string
-    char *text = (char *)calloc(INIT_LEN, sizeof(char));
-
-    //Check if allocation was successful
-    if (text == NULL){
+    char *copy = (char *)calloc(strlen(text), sizeof(char));
+    if(copy == NULL){
         perror("Error in calloc:");
         exit(1);
     }
-    else{
-        // Insert input into the string
-        init(text, INIT_LEN);
+    strcpy(copy, text);
+
+    char *word = strtok(copy, " \n\r\v\t\f");
+    while(word != NULL){
+        insert(root, word);
+        word = strtok(NULL, " \n\r\v\t\f");
     }
     
+    free(copy);
+}
+
+void print_word(char *word, int n, int count){
+    int i;
+    for(i = 0; i < n; i++){
+        printf("%c", word[i]);
+    }
+    printf(" %d\n", count);
+}
+
+void print_words(Node *root, char *word, int index, int length){
+    if (root == NULL)
+        return;
+    if(root->is_end){
+        print_word(word, index, root->count);
+    }
+    int i;
+    for(i = 0; i < AB_SIZE; i++){
+        if(root->children[i] != NULL){
+            if (index>=length-1){
+                word = realloc(word, (length+=10)*sizeof(char));
+            }
+            word[index] = LETTER(i);
+            print_words(root->children[i], word, index+1, length);
+        }
+    }
+}
+
+void print_words_r(Node *root, char *word, int index, int length){
+    if (root == NULL)
+        return;
+    int i;
+    for(i = AB_SIZE-1; i >= 0; i--){
+        if(root->children[i] != NULL){
+            if (index>=length-1){
+                word = realloc(word, (length+=10)*sizeof(char));
+            }
+            word[index] = LETTER(i);
+            print_words_r(root->children[i], word, index+1, length);
+        }
+    }
+    if(root->is_end){
+        print_word(word, index, root->count);
+    }
+}
+
+int main(int argc, char const *argv[]){
+
+    //Dynamically allocate memory for our string
+    char *text = (char *)malloc(INIT_LEN*sizeof(char));
+
+    //Check if allocation was successful
+    if (text == NULL){
+        perror("Error in malloc:");
+        exit(1);
+    }
+
+    // Insert input into the string
+    else{
+        init(text, INIT_LEN);
+    }
+
+    //Dynamically allocate memory for each word
+    char *word = (char *)malloc(INIT_LEN*sizeof(char));
+
+    //Check if allocation was successful
+    if (word == NULL){
+        perror("Error in malloc:");
+        exit(1);
+    }
+
     Node *root = new_Node();
+    fill_trie(text, root);
+    int pos = 0;
+
+    if (argc > 1 && *(argv[1]) == 'r')
+        print_words_r(root, word, pos, INIT_LEN);
+    else
+        print_words(root, word, pos, INIT_LEN);
+    
+    free(word);
+    free(text);
+    return 0;
 
 }
+
+
