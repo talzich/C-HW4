@@ -12,7 +12,6 @@ typedef struct node{
     struct node *children[AB_SIZE]; // Will store all the children this node has
     bool is_end;    // Will store whether this node marks the end of a word
     long unsigned int count; // Will store how many times this word was entered
-    char letter;    // Will store the letter that lead to this node
 }Node;
 
 Node *new_Node(void){ 
