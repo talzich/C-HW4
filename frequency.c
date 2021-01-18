@@ -16,9 +16,7 @@ typedef struct node{
 
 Node *new_Node(void){ 
 
-    Node *pNode = NULL; 
-  
-    pNode = (Node *)malloc(sizeof(Node)); 
+    Node *pNode = (Node *)malloc(sizeof(Node)); 
     if(pNode == NULL){
         perror("Error in malloc:");
         exit(1);
@@ -34,11 +32,14 @@ Node *new_Node(void){
     return pNode; 
 } 
 
-void init(char *str, int length){
+char *init(char *str, int length){
+    printf("Init start\n");
     int i =0;
     char c; 
 
+    printf("While loop start\n");
     while((c = getchar())!= EOF){
+        printf("Inside while\n");
         if (i >= length-1)
             str = realloc(str, (length += 10)*sizeof(char));
         
@@ -55,6 +56,7 @@ void init(char *str, int length){
             str[i++] = c;
         }
     }
+    return str;
 }
 
 void insert(Node *root, char *word){
@@ -91,8 +93,7 @@ void fill_trie(char *text, Node *root){
         insert(root, word);
         word = strtok(NULL, " \n\r\v\t\f");
     }
-    if(copy != NULL)
-        free(copy);
+    free(copy);
 }
 
 void print_word(char *word, int n, int count){
@@ -153,9 +154,8 @@ int main(int argc, char const *argv[]){
 
     // Insert input into the string
     else{
-        init(text, INIT_LEN);
+        text = init(text, INIT_LEN);
     }
-
     //Dynamically allocate memory for each word
     char *word = (char *)malloc(INIT_LEN*sizeof(char));
 
@@ -165,14 +165,17 @@ int main(int argc, char const *argv[]){
         exit(1);
     }
 
+    //char *text = "it was the best of times it was the worst of times it was the age of wisdom it was the age of foolishness";
     Node *root = new_Node();
     fill_trie(text, root);
     int pos = 0;
 
+    free(text);
     if (argc > 1 && *(argv[1]) == 'r')
         print_words_r(root, word, pos, INIT_LEN);
     else
         print_words(root, word, pos, INIT_LEN);
     
+    free(word);
     return 0;
 }
