@@ -33,13 +33,10 @@ Node *new_Node(void){
 } 
 
 char *init(char *str, int length){
-    printf("Init start\n");
     int i =0;
     char c; 
 
-    printf("While loop start\n");
     while((c = getchar())!= EOF){
-        printf("Inside while\n");
         if (i >= length-1)
             str = realloc(str, (length += 10)*sizeof(char));
         
